@@ -1,0 +1,67 @@
+{
+	"data": [{
+		"name": "Bidder6",
+		"value": 1,
+		"category": 4,
+		"id": 5
+	}, {
+		"name": "Bidder7",
+		"value": 1,
+		"category": 4,
+		"id": 6
+	}, {
+		"name": "Bidder8",
+		"value": 1,
+		"category": 4,
+		"id": 7
+	}, {
+		"name": "Bidder9",
+		"value": 1,
+		"category": 4,
+		"id": 8
+	}, {
+		"name": "Bidder10",
+		"value": 1,
+		"category": 1,
+		"id": 9
+	}],
+	"edge": [{
+		"source": 9,
+		"target": 5
+	}, {
+		"source": 9,
+		"target": 6
+	}, {
+		"source": 9,
+		"target": 7
+	}, {
+		"source": 9,
+		"target": 8
+	}, {
+		"source": 5,
+		"target": 8
+	}, {
+		"source": 5,
+		"target": 6
+	}],
+	"categories": [{
+		"name": "HTMLElement",
+		"keyword": {},
+		"base": "HTMLElement"
+	}, {
+		"name": "WebGL",
+		"keyword": {},
+		"base": "WebGLRenderingContext"
+	}, {
+		"name": "SVG",
+		"keyword": {},
+		"base": "SVGElement"
+	}, {
+		"name": "CSS",
+		"keyword": {},
+		"base": "CSSRule"
+	}, {
+		"name": "Other",
+		"keyword": {}
+	}]
+}

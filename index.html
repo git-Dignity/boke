@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width">
+    <!-- 如何在https协议下访问http等不安全的资源 -->
+    <meta http-equiv ="Content-Security-Policy" content="upgrade-insecure-requests">
+
+    <title>奔跑的juv</title>
+      <!-- bootstartVue layui element-ui  -->
+      
+     
+    
+  </head>
+  <body>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+      
+      <script type="text/javascript" src="./static/utils/layui/layui.all.js"></script>
+      <script src="https://unpkg.com/clipic/dist/clipic.min.js"></script>
+      <!-- 搜狐查询接口获取ip -->
+      <script src="http://pv.sohu.com/cityjson?ie=utf-8"></script>
+      <!-- <script src="./static/jquery-1.9.1.min.js"></script> -->
+     
+    
+
+      <script>
+
+      //苹果禁止缩放屏幕
+      window.onload = function() { 
+          document.addEventListener('touchstart', function(event) { 
+              if (event.touches.length > 1) { 
+                  event.preventDefault() 
+              } 
+          }) 
+          document.addEventListener('gesturestart', function(event) { 
+              event.preventDefault() 
+          }) 
+      }
+
+
+
+
+
+      </script>
+    
+  </body>
+</html>

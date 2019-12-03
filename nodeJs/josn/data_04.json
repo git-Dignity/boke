@@ -1,0 +1,108 @@
+{
+	"data": [{
+		"name": "Bidder14",
+		"value": 1,
+		"category": 1,
+		"id": 13
+	}, {
+		"name": "Bidder15",
+		"value": 1,
+		"category": 4,
+		"id": 14
+	}, {
+		"name": "Bidder16",
+		"value": 1,
+		"category": 4,
+		"id": 15
+	}, {
+		"name": "Bidder17",
+		"value": 1,
+		"category": 4,
+		"id": 16
+	}, {
+		"name": "Bidder18",
+		"value": 1,
+		"category": 4,
+		"id": 17
+	},{
+		"name": "Bidder19",
+		"value": 1,
+		"category": 4,
+		"id": 18
+	},{
+		"name": "Bidder20",
+		"value": 1,
+		"category": 4,
+		"id": 19
+	},{
+		"name": "Bidder21",
+		"value": 1,
+		"category": 4,
+		"id": 20
+	},{
+		"name": "Bidder22",
+		"value": 1,
+		"category": 4,
+		"id": 21
+	}],
+	"edge": [{
+		"source": 13,
+		"target": 14
+	}, {
+		"source": 13,
+		"target": 15
+	}, {
+		"source": 13,
+		"target": 17
+	}, {
+		"source": 13,
+		"target": 18
+	}, {
+		"source": 13,
+		"target": 19
+	}, {
+		"source": 13,
+		"target": 20
+	}, {
+		"source": 18,
+		"target": 19
+	},{
+		"source": 18,
+		"target": 20
+	},{
+		"source": 19,
+		"target": 20
+	},{
+		"source": 16,
+		"target": 18
+	},{
+		"source": 16,
+		"target": 20
+	},{
+		"source": 17,
+		"target": 21
+	},{
+		"source": 15,
+		"target": 21
+	}],
+	"categories": [{
+		"name": "HTMLElement",
+		"keyword": {},
+		"base": "HTMLElement"
+	}, {
+		"name": "WebGL",
+		"keyword": {},
+		"base": "WebGLRenderingContext"
+	}, {
+		"name": "SVG",
+		"keyword": {},
+		"base": "SVGElement"
+	}, {
+		"name": "CSS",
+		"keyword": {},
+		"base": "CSSRule"
+	}, {
+		"name": "Other",
+		"keyword": {}
+	}]
+}
