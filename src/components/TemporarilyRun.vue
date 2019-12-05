@@ -1,7 +1,6 @@
 <template>
   <div>
     <span class="iconfont zzm-bokedaibanrenwu-xian-copy-copy-copy" @click="outerVisible = true"></span>
-
   
   <el-dialog 
      title="任务"
@@ -17,7 +16,6 @@
             height="90%"
             title="内层 Dialog"
             :visible.sync="innerVisible"
-           
             append-to-body>
           </el-dialog>
 
@@ -26,12 +24,24 @@
               <el-tab-pane label="代办任务">
 
                
-                <CustomTable 
+                <XrTable 
                     :columns="columns" 
                     :data="data" 
-                    @on-selection-change="onSelectionChange"
-                    @on-sort="onSort"
-                    ></CustomTable>
+                    @on-selection-change="onSelectionChange($event)"
+                    @on-sort="onSort($event)"
+                    height="280"
+                    >
+                    <!-- 自定义内容 -->
+                    <!-- 其中 age 是对应的插槽名，{row, col, index} 对应的是行、列、索引这三个参数 -->
+                    <template v-slot:age="{row, col, index}">{{ row.age + '岁'}}</template>
+                    <template v-slot:action="{row, col, index}" >
+                      <div :style="{display: 'flex'}">
+                        <el-button type="primary" icon="el-icon-edit" size="mini" circle></el-button>
+                        <el-button type="danger" icon="el-icon-delete" size="mini" circle></el-button>
+                      </div>
+                    </template>
+
+                  </XrTable>
             
                 
               </el-tab-pane>
@@ -55,7 +65,8 @@
 </template>
 
 <script>
-  import CustomTable from './CustomTable.vue'
+  import XrTable from './XrTable.vue'
+  import Sort from './tool/Sort.vue'
     
     export default{
         name : 'temporarilyRun',
@@ -65,23 +76,32 @@
               innerVisible:false,
 
                columns: [
+               
                   {
                     // 添加全选功能
-                    type: 'selection'  // 这个地方可以不用写 key，type 就相当于 key
+                    type: 'selection',  // 这个地方可以不用写 key，type 就相当于 key
+                    width:"180"
                   },
                   {
                     title: '姓名',
                     key: 'name',
-                    sortable: true
+                    sortable: true,
+                    width:"180"
                   },
                   {
                     title: '年龄',
-                    key: 'age',
-                    sortable: true
+                    slot: 'age',  // 用来表明表格的某一列是否需要自定义内容
+                    sortable: true,
+                    width:"180"
                   },
                   {
                     title: '职位',
                     key: 'job'
+                  },
+                  {
+                    title: '操作',
+                    slot: 'action',
+                    width:"180"
                   }
                 ],
                 data: [
@@ -119,13 +139,31 @@
                     age: 18,
                     job: '测试',
                     desc: '这是展开的描述啊5'
+                  },
+                  {
+                    id: 6,
+                    name: 'Lucy',
+                    age: 18,
+                    job: '测试',
+                    desc: '这是展开的描述啊5'
+                  },
+                  {
+                    id: 7,
+                    name: 'Lucy',
+                    age: 18,
+                    job: '测试',
+                    desc: '这是展开的描述啊5'
                   }
                 ],
 
             }
         },
         components:{
-           CustomTable
+           XrTable,
+           Sort
+        },
+        created(){
+          
         },
         methods: {
             handleClose(done) {
@@ -136,8 +174,25 @@
               .catch(_ => {});
           },
           //勾选的时候触发
-          onSelectionChange(){
-            console.log('selection')
+          onSelectionChange(selectedRows){
+            console.log(selectedRows)
+          },
+          onSort(key){
+            console.log(key)
+            if(key.sortType === 'desc'){
+              //因为年龄那加了自定义字，使用变成slot插槽，使用要加多个判断
+              if(key.slot){
+                this.data.sort(Sort.sortBy(key.slot,false))
+              }else{
+                this.data.sort(Sort.sortBy(key.key,false))
+              }
+            }else{
+              if(key.slot){
+                this.data.sort(Sort.sortBy(key.slot,true))
+              }else{
+                this.data.sort(Sort.sortBy(key.key,true))
+              }
+            }
           }
         }
     

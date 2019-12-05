@@ -5,7 +5,6 @@
         <router-view class="child-view" :key="key"></router-view>
       </transition>
 
-
       <div>
         <MusicPlayer></MusicPlayer>
       </div>
@@ -27,7 +26,6 @@ import Tqh from './components/Tqh'
 import SingerSong from './components/SingerSong'
 import MusicPlayer from './components/MusicPlayer'
 import TemporarilyRun from './components/TemporarilyRun'
-import CustomTable from './components/CustomTable'
 
 
     
@@ -99,8 +97,7 @@ export default {
     TimeL,
     SingerSong,
     MusicPlayer,
-    TemporarilyRun,
-    CustomTable
+    TemporarilyRun
   }
 }
 </script>

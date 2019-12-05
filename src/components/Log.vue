@@ -8,8 +8,6 @@
       </div>
       <br /><br />
 
-     
-
     </div>
 </template>
 
