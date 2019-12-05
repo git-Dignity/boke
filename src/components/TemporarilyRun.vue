@@ -9,6 +9,7 @@
      :modal-append-to-body='false' 
      width="90%"
      height="100%" 
+     append-to-body
      center
      >
           <el-dialog
@@ -20,10 +21,9 @@
           </el-dialog>
 
           <div  class="dialog-footer">
-            <el-tabs type="border-card" stretch="true">
+            <el-tabs type="border-card" :stretch=true>
               <el-tab-pane label="代办任务">
 
-               
                 <XrTable 
                     :columns="columns" 
                     :data="data" 

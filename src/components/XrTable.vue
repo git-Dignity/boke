@@ -1,7 +1,7 @@
 <template>
   <div class="xr-table" :style="tableStyle">
     <div class="xr-table__header" ref="tableHeader">
-      <table ref="tableHeaderTable">
+      <table ref="tableHeaderTable" >
         <colgroup>
           <col v-for="(col, index) in columns" :key="index" :width="col.width || ''">
         </colgroup>

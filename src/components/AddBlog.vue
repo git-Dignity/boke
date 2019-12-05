@@ -47,9 +47,6 @@
                 <p />
 
                
-    
-
-
                 <b-form-group label=" ">
                     <b-form-checkbox-group
                         v-model="blog.categories"
