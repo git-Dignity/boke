@@ -129,7 +129,7 @@ export default {
     
     post(){
         if(this.blog.title!='' && this.blog.content!='' && this.blog.categor!='' && this.blog.author!='' ){
-          this.$axios.post('https://zhengzemin.cn/blog/addboke',{
+          this.$axios.post(this.GLOBAL.url_api + '/blog/addboke',{
             title:this.blog.title,
             content:this.blog.content,
             categories:this.blog.categories,

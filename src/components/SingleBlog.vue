@@ -192,12 +192,12 @@ import pagination from './pagination.vue'
             
             
             
-            this.$http.get('https://zhengzemin.cn/blog/singleblog?id=' + this.id)
+            this.$http.get(this.GLOBAL.url_api + '/blog/singleblog?id=' + this.id)
                         .then(function(data){
 //                             console.log(data.body[0]);
                             this.blog = data.body[0];
                         })
-            this.$axios.post('https://zhengzemin.cn/blogComments/showComments',{
+            this.$axios.post(this.GLOBAL.url_api + '/blogComments/showComments',{
                           id:this.id       
                     }).then(data =>{
                 var dataLeng = data.data.length-1
@@ -253,7 +253,7 @@ import pagination from './pagination.vue'
                console.log(currentPage);
                  this.current = currentPage;
                // ajax请求, 向后台发送 currentPage, 来获取对应的数据
-                 this.$axios.post('https://zhengzemin.cn/blogComments/showComments',{
+                 this.$axios.post(this.GLOBAL.url_api + '/blogComments/showComments',{
                         id:this.id,
                         currentPage:currentPage,    // 第几页
                         display:this.display        // 每页显示条数
@@ -297,7 +297,7 @@ import pagination from './pagination.vue'
                 }
             },
             singleKeep(id){
-                this.$axios.post('https://zhengzemin.cn/blog/updateboke',{
+                this.$axios.post(this.GLOBAL.url_api + '/blog/updateboke',{
                     id:id,
                     title:this.blog.title,
                     content:this.blog.content,
@@ -313,7 +313,7 @@ import pagination from './pagination.vue'
             zan(data){
 //                console.log(data)
                  var userArrNew = [];
-                this.$axios.post('https://zhengzemin.cn/commentsLike/likeInsert',{
+                this.$axios.post(this.GLOBAL.url_api + '/commentsLike/likeInsert',{
                                                                                      commentsId:document.getElementById(data).firstElementChild.innerText,
                     loginId:JSON.parse(localStorage.getItem("login")).username
                    
@@ -322,11 +322,11 @@ import pagination from './pagination.vue'
                     this.userArr = data.data;
                     
                     //更新点赞次数到comments表
-                    this.$axios.post('https://zhengzemin.cn/commentsLike/likeShow').then(data =>{
+                    this.$axios.post(this.GLOBAL.url_api + '/commentsLike/likeShow').then(data =>{
 
 //                        console.log(data);
                         //在次查询表中的数据
-                        this.$axios.post('https://zhengzemin.cn/blogComments/showComments',{
+                        this.$axios.post(this.GLOBAL.url_api + '/blogComments/showComments',{
                         id:this.id,
                         currentPage:this.current,    // 第几页
                         display:this.display        // 每页显示条数
@@ -387,7 +387,7 @@ import pagination from './pagination.vue'
                 if(JSON.parse(localStorage.getItem("login")).username == this.GLOBAL.administrator){
                   if(confirm('确认要删除？')) 
                     { 
-                        this.$axios.post('https://zhengzemin.cn/blogComments/delcomments',{
+                        this.$axios.post(this.GLOBAL.url_api + '/blogComments/delcomments',{
                           id:e.target.parentNode.parentNode.lastElementChild.innerText
                         })
                         .then(data =>{
@@ -410,7 +410,7 @@ import pagination from './pagination.vue'
             },
             comments(id){
                 if(this.commentsContent!=''){
-                  this.$axios.post('https://zhengzemin.cn/blogComments/comments',{
+                  this.$axios.post(this.GLOBAL.url_api + '/blogComments/comments',{
                     bokeId:id,
                     commentsContent:this.commentsContent,
                     commentTime:this.commentTime,
@@ -420,7 +420,7 @@ import pagination from './pagination.vue'
                      alert('亲，你的评论已飞速上传！')
                      this.commentsContent = '';
 
-                     this.$axios.post('https://zhengzemin.cn/blogComments/showComments',{
+                     this.$axios.post(this.GLOBAL.url_api + '/blogComments/showComments',{
                           id:this.id,
                           currentPage:this.current,    // 第几页
                           display:this.display        // 每页显示条数

@@ -13,6 +13,8 @@ const colorList = [
 const administrator  = 'zheng'
 // 在indexhtml那用搜狐查询接口获取ip
 const UserIp  = returnCitySN["cip"];  
+//开发、部署后会自动去找当前调用的node接口，在config的dev.env.js、prod.env.js下配置
+const url_api = process.env.url_api;
 
 //获取当前时间
 function getNowTime(){      
@@ -80,6 +82,7 @@ export default
   colorList,
   administrator,
   UserIp,
+  url_api,
   getNowTime,
   encryptDecryptChar,
   encryptChar,

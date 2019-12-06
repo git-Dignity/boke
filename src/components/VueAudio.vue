@@ -7,7 +7,6 @@
     :src="url" :preload="audio.preload"
     @play="onPlay" 
     @error="onError"
-   
     @pause="onPause" 
     @timeupdate="onTimeupdate" 
     @loadedmetadata="onLoadedmetadata"
@@ -58,9 +57,7 @@
   </div>
 </template>
 
-<style scoped>
-    @import  '../../static/utils/layui/css/layui.css'
-</style>
+
 
 <script>
    
@@ -212,30 +209,35 @@
       // 开始播放
 
       startPlay() {
-        this.$refs.audio.play()
+        this.$refs.audio.play();
+        this.$emit('audioState',"play");
         console.log('开始播放');
       },
       // 暂停
       pausePlay() {
         this.$refs.audio.pause();
+        this.$emit('audioState',"pause");
         console.log('暂停');
       },
       // 当音频暂停
       onPause () {
-        this.audio.playing = false
+        this.audio.playing = false;
+        this.$emit('audioState',"pause");
       },
       // 当发生错误, 就出现loading状态
       onError () {
         this.audio.waiting = false  //false
         console.log('当发生错误, 就出现loading状态');
+        this.$emit('audioState',"pause");
       },
       // 当音频开始等待
       onWaiting (res) {
-        console.log(res)
+        console.log(res);
+        this.$emit('audioState',"pause");
       },
       // 当音频开始播放
       onPlay (res) {
-        console.log(res)
+        // console.log(res)
         this.audio.playing = true
         this.audio.loading = false
 
@@ -264,7 +266,7 @@
       // 当加载语音流元数据完成后，会触发该事件的回调函数
       // 语音元数据主要是语音的长度之类的数据
       onLoadedmetadata(res) {   // 获取音频总时长
-        console.log('loadedmetadata')
+        // console.log('loadedmetadata')
 //        console.log(res)    //可以打开看看
         this.audio.waiting = true;  // false
         this.audio.maxTime = parseInt(res.target.duration)
@@ -286,13 +288,15 @@
         return value ? '放音' : '静音'
       },
       transSpeed(value) {
-        return '快进: x' + value
+        return '快进: x' + value;
       }
     },
     mounted(){
+      
        this.$refs.audio.play();
 
-       let target = this.$refs.audio
+       let target = this.$refs.audio;
+
 
         let audios = document.getElementsByTagName('audio');
         // 如果设置了排他性，当前音频播放是，其他音频都要暂停       [...audios]可以把一个类数组转化成数组   就是我全部的音频的数组
@@ -301,13 +305,24 @@
             item.pause()
           }
         })
+        
+        // 判断音乐是否在播放
+        if(this.$refs.audio.paused){
+          this.$emit('audioState',"pause");
+        }else{
+          this.$emit('audioState',"play");
+        }
+        
         // console.log('音乐燥起来');
     }
   }
 
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+    @import  '../../static/utils/layui/css/layui.css'
+</style>
+
 <style scoped>
   .main-wrap{
     padding: 10px 15px;

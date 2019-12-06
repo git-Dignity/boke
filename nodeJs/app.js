@@ -38,7 +38,7 @@ const setUp = require('./router/setUp.js');
 //var mime = require('mime'); //加载mime，为了判断你是什么文件的格式并加载进来
 
 var db = mysql.createConnection({
-    host: 'localhost', //主机名，此处为本机
+    host: '47.107.103.41', //主机名，此处为本机
     user: 'root', //mysql 用户名
     password: 'root', //mysql 密码
     database: 'qynbgl' //连接的数据库
@@ -53,7 +53,7 @@ db.on('error',function(err){
 
 function reconnection(){
         db = mysql.createConnection({   
-            host: 'localhost', //主机名，此处为本机
+            host: '47.107.103.41', //主机名，此处为本机
             user: 'root', //mysql 用户名
             password: 'root', //mysql 密码
             database: 'qynbgl' //连接的数据库
