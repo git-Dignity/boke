@@ -58,9 +58,7 @@
   </div>
 </template>
 
-<style scoped>
-    @import  '../../static/utils/layui/css/layui.css'
-</style>
+
 
 <script>
    
@@ -306,6 +304,11 @@
   }
 
 </script>
+
+<style scoped>
+    @import  '../../static/utils/layui/css/layui.css'
+</style>
+
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
