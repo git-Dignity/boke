@@ -29,10 +29,7 @@
     </div>
 </template>
 
-<style scoped>
-@import  '../../static/utils/layui/css/layui.css'
 
-</style>
 
 
 
@@ -90,7 +87,7 @@
               
                 var _this = this;
                 $.ajax({
-                    url: "https://zhengzemin.cn/music/SoundRecording",
+                    url: this.GLOBAL.url_api + "/music/SoundRecording",
                     type: "POST",
                     data: formData,
                     contentType: false,
@@ -140,7 +137,10 @@
   }
 </script>
 
+<style scoped>
+@import  '../../static/utils/layui/css/layui.css'
 
+</style>
 
 <style scoped lang="scss">
 .layui-btn{

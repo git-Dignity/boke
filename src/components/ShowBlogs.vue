@@ -20,8 +20,9 @@
             <el-button slot="append" icon="el-icon-search"></el-button>
           </el-input>
         </div>
+
         
-        <div v-for="(blog,index) in currentPage" class="single-blog">
+        <div v-for="(blog,index) in currentPage" class="single-blog" :key="blog.id">
            
           <!-- <div v-model="index">{{index}}</div> --> 
             <router-link v-bind:to = "'/blog/singleblog/' + blog.id">
@@ -67,7 +68,7 @@ export default {
   
   created(){
      
-    this.$http.post('https://zhengzemin.cn/blog/showblog')
+    this.$http.post(this.GLOBAL.url_api + '/blog/showblog')
     .then(function(data){
       // console.log(data);
       
@@ -110,7 +111,7 @@ export default {
   },
   methods:{
     getCurrentPageData(currentPage,pageNum){
-      this.$http.post('https://zhengzemin.cn/blog/showblog',{pagenumL:currentPage,pagenumR:pageNum})
+      this.$http.post(this.GLOBAL.url_api + '/blog/showblog',{pagenumL:currentPage,pagenumR:pageNum})
       .then(res=>{
         this.$store.commit("currentPage",res.body)
       })
@@ -157,7 +158,7 @@ export default {
         if(JSON.parse(localStorage.getItem("login")).username == this.GLOBAL.administrator){
           if(confirm('确认要删除？')) 
   			  { 
-            this.$axios.post('https://zhengzemin.cn/blog/delblog',{
+            this.$axios.post(this.GLOBAL.url_api + '/blog/delblog',{
               id:id
             })
             .then(data =>{
@@ -174,7 +175,7 @@ export default {
        return; 
     },
     filteredBlogs(){
-      this.$axios.post("https://zhengzemin.cn/blog/searchblog",{
+      this.$axios.post(this.GLOBAL.url_api + "/blog/searchblog",{
         title:this.search
       })
       .then(res => {
@@ -186,7 +187,7 @@ export default {
       })
     },
     selectCategory(event, item) {     //change 触发事件
-        this.$axios.post("https://zhengzemin.cn/blog/selectCategory",{
+        this.$axios.post(this.GLOBAL.url_api + "/blog/selectCategory",{
           categories:event
         })
         .then(res => {

@@ -81,7 +81,7 @@ import pagination from './pagination.vue'
         },
         created(){
 
-             this.$http.post('https://zhengzemin.cn/music/singerSong?name=' + this.name)
+             this.$http.post(this.GLOBAL.url_api + '/music/singerSong?name=' + this.name)
           .then(function(data){
             // console.log(data);
               var dataBodyLeng = data.body.length-1
@@ -107,11 +107,11 @@ import pagination from './pagination.vue'
 
                 if(confirm('确认要删除该歌曲？')) 
                   { 
-                      this.$axios.post('https://zhengzemin.cn/music/delAudio',{
+                      this.$axios.post(this.GLOBAL.url_api + '/music/delAudio',{
                           url:audioUrl.innerHTML
                       }).then(data =>{
                         this.$store.commit("delAudio",audioUrl.innerHTML)
-                        console.log(data);
+                        console.log(data); 
 
                       }).catch(e => {
                         console.log(e);
@@ -134,7 +134,7 @@ import pagination from './pagination.vue'
                  this.current = currentPage;
                  // console.log(currentPage,this.display);
                // ajax请求, 向后台发送 currentPage, 来获取对应的数据
-                 this.$axios.post('https://zhengzemin.cn/music/singerSong?name=' + this.name,{
+                 this.$axios.post(this.GLOBAL.url_api + '/music/singerSong?name=' + this.name,{
                         currentPage:currentPage,    // 第几页
                         display:this.display        // 每页显示条数
                      
@@ -163,7 +163,7 @@ import pagination from './pagination.vue'
              },
              searchMusicName(){
               setTimeout(e =>{
-                this.$axios.post("https://zhengzemin.cn/music/searchMusic",{
+                this.$axios.post(this.GLOBAL.url_api + "/music/searchMusic",{
                   url:this.search,
                   name:this.name
                 })

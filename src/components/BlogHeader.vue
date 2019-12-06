@@ -79,5 +79,7 @@ nav{
   bottom: 8%;
   z-index: 101;
   color:#ee18c4;
+  filter: drop-shadow(10px 10px 10px rgba(0,0,0,.3));
 }
+
 </style>

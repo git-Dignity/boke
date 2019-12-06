@@ -72,7 +72,7 @@ export default {
         // console.log(newVal+"---"+oldVal);
         // console.log(this.$route.name)
         // 登录的时候，路由没有发生变化，所以除了登录之外的每一个操作都存在数据库
-        this.$axios.post('https://zhengzemin.cn/log',{
+        this.$axios.post(this.GLOBAL.url_api + '/log',{
             loginTime:this.GLOBAL.getNowTime(),
             userAgent:navigator.userAgent,
             username:JSON.parse(localStorage.getItem("login")).username,

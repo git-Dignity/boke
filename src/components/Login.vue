@@ -78,7 +78,7 @@ let redirect = decodeURIComponent(this.$route.query.redirect || '/');
 	   sub(){
       console.log(this.GLOBAL.encryptChar($("#password").val()+this.GLOBAL.encryptDecryptChar))
         var _this = this;
-         this.$axios.post('https://zhengzemin.cn/login',{
+         this.$axios.post(this.GLOBAL.url_api + '/login',{
               username:$("#username").val(),
               password:this.GLOBAL.encryptChar($("#password").val()+this.GLOBAL.encryptDecryptChar),
               loginTime:this.loginTime,

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span class="iconfont zzm-bokedaibanrenwu-xian-copy-copy-copy" @click="outerVisible = true"></span>
+    <div class="iconfont zzm-bokedaibanrenwu-xian-copy-copy-copy" @click="outerVisible = true"></div>
   
   <el-dialog 
      title="任务"
@@ -42,7 +42,6 @@
                     </template>
 
                   </XrTable>
-            
                 
               </el-tab-pane>
                <el-tab-pane>
@@ -74,9 +73,7 @@
             return{
               outerVisible:false,
               innerVisible:false,
-
                columns: [
-               
                   {
                     // 添加全选功能
                     type: 'selection',  // 这个地方可以不用写 key，type 就相当于 key
@@ -178,7 +175,6 @@
             console.log(selectedRows)
           },
           onSort(key){
-            console.log(key)
             if(key.sortType === 'desc'){
               //因为年龄那加了自定义字，使用变成slot插槽，使用要加多个判断
               if(key.slot){
