@@ -20,8 +20,8 @@ import Login from './components/Login'
 import BlogFooter from './components/BlogFooter'
 import Test from './components/Test'
 import Music from './components/Music'
-import VueAudio from './components/VueAudio'
-import TimeL from './components/TimeL'
+// import VueAudio from './components/VueAudio'
+import TimeLineUse from './components/TimeLineUse'
 import Tqh from './components/Tqh'
 import SingerSong from './components/SingerSong'
 import MusicPlayer from './components/MusicPlayer'
@@ -93,8 +93,8 @@ export default {
     BlogFooter,
     Test,
     Music,
-    VueAudio,
-    TimeL,
+    // VueAudio,
+    TimeLineUse,
     SingerSong,
     MusicPlayer,
     TemporarilyRun

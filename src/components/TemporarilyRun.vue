@@ -64,7 +64,7 @@
 </template>
 
 <script>
-  import XrTable from './XrTable.vue'
+  import XrTable from './utils/XrTable.vue'
   import Sort from './tool/Sort.vue'
     
     export default{

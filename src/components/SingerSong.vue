@@ -42,15 +42,15 @@
 <script>
 import jquery from '../../static/jquery-1.9.1.min'
 import BlogHeader from './BlogHeader.vue'  
-import VueAudio from './VueAudio.vue'
-import pagination from './pagination.vue'
+// import VueAudio from './VueAudio.vue'
+import pagination from './utils/pagination.vue'
 
     
     export default{
         name : 'singer-song',
         components:{
            BlogHeader,
-            VueAudio,
+            // VueAudio,
             'v-pagination': pagination
         },
         data(){

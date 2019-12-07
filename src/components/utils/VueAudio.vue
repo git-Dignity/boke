@@ -320,7 +320,7 @@
 </script>
 
 <style scoped>
-    @import  '../../static/utils/layui/css/layui.css'
+    @import  '../../../static/utils/layui/css/layui.css'
 </style>
 
 <style scoped>

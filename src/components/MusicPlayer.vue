@@ -22,7 +22,7 @@
   </div>
 </template>
 <script>
-import VueAudio from "./VueAudio.vue";
+import VueAudio from "./utils/VueAudio.vue";
 
 export default {
   name: "music-player",

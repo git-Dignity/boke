@@ -38,7 +38,7 @@
     import BlogHeader from './BlogHeader.vue'  
 //    import flow from '../../static/layui/lay/modules/flow'
 //        import laypage from '../../static/layui/lay/modules/laypage'
-     import pagination from './pagination.vue'
+     import pagination from './utils/pagination.vue'
          
     
   export default {
