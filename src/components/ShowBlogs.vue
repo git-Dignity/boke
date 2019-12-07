@@ -67,11 +67,10 @@ export default {
   },
   
   created(){
-     
+     console.log(this.GLOBAL.url_api)
     this.$http.post(this.GLOBAL.url_api + '/blog/showblog')
     .then(function(data){
       // console.log(data);
-      
       this.blogs = data.body//初始化所有数据
      
       // this.$store.commit("currentPage",{pagenumL:0,pagenumR:5}); //初始化
