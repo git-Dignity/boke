@@ -45,9 +45,9 @@
 
 <script>
 import BlogHeader from './BlogHeader.vue'
-import timeline from './timeline.vue'
-import timelineItem from './timelineItem.vue'
-import timelineTitle from './timelineTitle.vue'
+import timeline from './utils/timeline.vue'
+import timelineItem from './utils/timelineItem.vue'
+import timelineTitle from './utils/timelineTitle.vue'
     
 export default {
   components: {

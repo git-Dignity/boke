@@ -152,7 +152,7 @@
 <script>
 import BlogHeader from './BlogHeader.vue'
 import VueStar from 'vue-star'
-import pagination from './pagination.vue'
+import pagination from './utils/pagination.vue'
  import jquery from '../../static/jquery-1.9.1.min'   
  // import layuiAll from '../../static/layui/layui'   
 // import flow from "../../static/layui/src/lay/modules/flow"

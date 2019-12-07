@@ -5,7 +5,7 @@ import Login from '../components/Login.vue'
 import Test from '../components/Test.vue'
 import Music from '../components/Music.vue'
 import SingerSong from '../components/SingerSong.vue'
-import TimeL from '../components/TimeL.vue'
+import TimeLineUse from '../components/TimeLineUse.vue'
 import Tqh from '../components/Tqh.vue'
 import MusicPlayer from '../components/MusicPlayer.vue'
 import SetUp from '../components/SetUp.vue'
@@ -21,7 +21,7 @@ const routes = [
     {path:"/test",name:'test',component:Test},
     {path:'/music',name:'music',component:Music,meta:{requireAuth:true}},
     {path:'/singerSong/:name',name:'SingerSong',component:SingerSong,meta:{requireAuth:true}},
-    {path:'/TimeL',name:'TimeL',component:TimeL,meta:{requireAuth:true}},
+    {path:'/TimeLineUse',name:'TimeLineUse',component:TimeLineUse,meta:{requireAuth:true}},
     {path:'/Tqh',name:'Tqh',component:Tqh},
     {path:'/MusicPlayer',name:'MusicPlayer',component:MusicPlayer,meta:{requireAuth:true}},
     {path:'/setUp',name:'setUp',component:SetUp,meta:{requireAuth:true}},

@@ -194,18 +194,20 @@ app.post('/updateboke',function(req,res){
 
 
 //删除博客
-app.post('/delblog',function(req,res){
+app.delete('/delblog',function(req,res){
 	
-	var id = req.body.id;
+	var id =  req.query;
+	console.log(id)
+	console.log(req.param("id"))
 
-	db(`delete from boke where id = '${id}'`,function(err,data){
-		if(err){
-			console.log(err);
-			res.send("database error").end();
-		}else{
-			res.send("删除成功").end();
-		}
-	})
+	// db(`delete from boke where id = '${id}'`,function(err,data){
+	// 	if(err){
+	// 		console.log(err);
+	// 		res.send("database error").end();
+	// 	}else{
+	// 		res.send("删除成功").end();
+	// 	}
+	// })
 })
 
 

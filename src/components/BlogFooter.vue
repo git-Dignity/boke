@@ -3,7 +3,7 @@
      
               Copyright Min © 2019 · 粤ICP备19034667号 ·<br />
       
-      <router-link to = "/TimeL" exact>我爱你</router-link>
+      <router-link to = "/TimeLineUse" exact>我爱你</router-link>
       <router-link to = "/Tqh" exact>
         <span>~</span>
       </router-link>
