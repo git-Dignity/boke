@@ -33,6 +33,15 @@ Vue.prototype.GLOBAL = global_
 //使用阿里巴巴图标库
 import './assets/iconfont/iconfont.css'
 
+//富文本块
+import VueQuillEditor from 'vue-quill-editor'
+import 'quill/dist/quill.core.css'
+import 'quill/dist/quill.snow.css'
+import 'quill/dist/quill.bubble.css'
+  
+Vue.use(VueQuillEditor)
+
+Vue.prototype.Base64 = require("js-base64").Base64;
 
 
 

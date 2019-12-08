@@ -3,7 +3,7 @@ var db = require('./db.js');
 var express = require('express');
 const http = require('http');
 const WebSocket = require('ws');
-var app = express();
+var app = express(); 
 
 var numClients = 0;
 
@@ -121,6 +121,7 @@ app.post('/searchblog',function(req,res){
 			}
 		})
 	}else{
+		console.log('not title')
 		db(`select * from boke limit 0,5`,(err,filterData)=>{
 			if(err){
 				console.log(err);
@@ -196,18 +197,18 @@ app.post('/updateboke',function(req,res){
 //删除博客
 app.delete('/delblog',function(req,res){
 	
-	var id =  req.query;
-	console.log(id)
-	console.log(req.param("id"))
-
-	// db(`delete from boke where id = '${id}'`,function(err,data){
-	// 	if(err){
-	// 		console.log(err);
-	// 		res.send("database error").end();
-	// 	}else{
-	// 		res.send("删除成功").end();
-	// 	}
-	// })
+	// var id =  req.query.id;
+	var id =  req.param("id");
+	
+	db(`delete from boke where id = '${id}'`,function(err,data){
+		if(err){
+			console.log(err);
+			res.send("database error").end();
+		}else{
+			console.log(id)
+			res.send("删除成功").end();
+		}
+	})
 })
 
 

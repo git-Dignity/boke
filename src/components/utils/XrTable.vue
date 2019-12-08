@@ -108,6 +108,7 @@ export default {
     
     //手机端就让他tbody跟thead一样宽，才可以拖动（因为没有做移动端适配）
     let {tableHeaderTable} = this.$refs;
+    console.log(this.htmlWidth)
     setTimeout(()=>{
         if(this.htmlWidth<400){
             this.tableBodyWidth = parseInt(window.getComputedStyle(tableHeaderTable).width) + 'px';

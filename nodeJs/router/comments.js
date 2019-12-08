@@ -11,7 +11,7 @@ app.post('/comments',function(req,res){
 	var commentsContent = req.body.commentsContent;
     var commentTime = req.body.commentTime;
     var author = req.body.author;
-    console.log(req.body);
+    console.log(req.body.commentsContent);
   
     if(bokeId!='' && commentsContent!='' && author!=''){
     	
@@ -21,7 +21,7 @@ app.post('/comments',function(req,res){
 				res.send({msg:'数据添加失败'}).end();
 			}
 			else{
-				console.log(IntoData);
+				// console.log(IntoData);
 				// res.send(IntoData).end();
 				res.send({msg:'添加成功'}).end();
 			}
@@ -61,7 +61,7 @@ app.post('/showComments',function(req,res){
     }else{
         db(`select * from comments  where bokeId = '${bokeId}' limit ${currentPageA},${display} union All select count(*),"","","","","","" from comments  where bokeId = '${bokeId}' `,function(err,data){
 
-        
+        console.log()
             if(err){
                 console.log(err);
                 res.send("数据库错误").end();

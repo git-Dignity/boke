@@ -32,53 +32,33 @@ const commentsLike = require('./router/commentsLike.js');
 const music = require('./router/music.js');
 const upload = require('./router/upload.js');
 const log = require('./router/log.js');
-const sess = require('./router/session.js');
+const sess = require('./utils/session.js');
 const setUp = require('./router/setUp.js');
+var dbInfo = require('./utils/dbInfo.js')
 
 //var mime = require('mime'); //加载mime，为了判断你是什么文件的格式并加载进来
 
-//远程47.107.103.41
-// var db = mysql.createConnection({
-//     host: '47.107.103.41', //主机名，此处为本机
-//     user: 'root', //mysql 用户名
-//     password: 'root', //mysql 密码
-//     database: 'qynbgl' //连接的数据库 
-// });
-
-//公司的mysql
-var db = mysql.createPool({
-    host: 'localhost', //主机名，此处为本机
-    user: 'root', //mysql 用户名
-    password: 'root123', //mysql 密码
-    database: 'qynbgl' //连接的数据库
-});
-
-
-db.on('error',function(err){
-    if(err.code === 'PROTOCOL_CONNECTION_LOST') {
+var db = mysql.createPool(dbInfo);
+db.on('error', function (err) {
+    if (err.code === 'PROTOCOL_CONNECTION_LOST') {
         reconnection();
     }
 });
 
-function reconnection(){
-        db = mysql.createConnection({   
-            host: 'localhost', //主机名，此处为本机
-            user: 'root', //mysql 用户名
-            password: 'root123', //mysql 密码
-            database: 'qynbgl' //连接的数据库
-       });
-       db.connect(function(err) {
-       if(err){
-           throw err;
-           setTimeout('reconnection()', 1000);
-       }
-       });
-       db.on('error', function(err) {
-            console.log(err);
-            if(err.code === 'PROTOCOL_CONNECTION_LOST') {
-                  reconnection();
-            }
-       });
+function reconnection() {
+    db = mysql.createConnection(dbInfo);
+    db.connect(function (err) {
+        if (err) {
+            throw err;
+            setTimeout('reconnection()', 1000);
+        }
+    });
+    db.on('error', function (err) {
+        console.log(err);
+        if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+            reconnection();
+        }
+    });
 }
 
 
@@ -90,26 +70,23 @@ app.use(history());
 
 app.use(cors());
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended:true}));
-
-
-
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 // 先让他进去dist里面，然后把dist页面放到外层
-app.use(express.static(path.resolve(__dirname,'../dist')));
-app.use(express.static(path.resolve(__dirname,'../')));   //打包好的静态路径
+app.use(express.static(path.resolve(__dirname, '../dist')));
+app.use(express.static(path.resolve(__dirname, '../')));   //打包好的静态路径
 
 //app.use(express.static(path.join(__dirname,'../dist'))); 
 
-app.get('/',function(req,res){
+app.get('/', function (req, res) {
 
-   const html = fs.readFileSync(path.join(__dirname,'../dist/index.html'),'utf-8'); // 然后我们在进入dist目录下即可
-   res.send(html);
-}); 
+    const html = fs.readFileSync(path.join(__dirname, '../dist/index.html'), 'utf-8'); // 然后我们在进入dist目录下即可
+    res.send(html);
+});
 
 
-    // 创建websocket服务
+// 创建websocket服务
 // ws.createServer(connection => {
 //     console.log(4545)
 //     connection.on('text', function(result) {
@@ -126,26 +103,26 @@ app.get('/',function(req,res){
 
 //   }).listen(8083)
 
-app.use('/login',login); //登录
+app.use('/login', login); //登录
 
 // 博客页面
-app.use('/blog',blog);
+app.use('/blog', blog);
 
 //博客的评论
-app.use('/blogComments',comments);
+app.use('/blogComments', comments);
 
 //博客的评论点赞
-app.use('/commentsLike',commentsLike);
+app.use('/commentsLike', commentsLike);
 
 //录音、歌曲
-app.use('/music',music);
+app.use('/music', music);
 
-app.use('/upload',upload);
+app.use('/upload', upload);
 
 //日志
-app.use('/log',log);
+app.use('/log', log);
 
-app.use('/setUp',setUp);
+app.use('/setUp', setUp);
 
 // setInterval(function(){
 //     console.log(sess)
@@ -159,7 +136,7 @@ app.use('/setUp',setUp);
 //配置ssl证书
 const httpsOption = {
     key: fs.readFileSync('../2563695_zhengzemin.cn.key'),//证书文件的存放目录
-   cert: fs.readFileSync('../2563695_zhengzemin.cn.crt')
+    cert: fs.readFileSync('../2563695_zhengzemin.cn.crt')
 }
 
 
@@ -193,31 +170,31 @@ wss.on('connection', (wsConnect) => {
     });
     wsConnect.on('close', (message) => {
         console.log(`他走了`);
-              // 登录成功的时候发信息到微信通知（Server酱）
-console.log(username)
-var push_bark_url;
-if(username!=''){
-    username += '用户默默离开了';
-  push_bark_url = `https://api.day.app/MsrNtY7TVM9vXLqqL47UYh/${qs.escape(username)}?automaticallyCopy=1&copy=optional`;
-             
-}else{
-    push_bark_url = `https://api.day.app/MsrNtY7TVM9vXLqqL47UYh/${qs.escape("进来没干嘛就跑了")}?automaticallyCopy=1&copy=optional`;
-   
-}
-              https.get(push_bark_url, function(res_bark) {
-           
-                    res_bark.setEncoding('utf-8');
-                    var code = res_bark.statusCode;
-                    console.log(code)
-                    if (code == 200) {
-                        res_bark.on('data', function(data) {
-                          console.log(data);
-                       
-                        });
-                    } else {
-                      console.log('失败');
-                    }
-              }).on('error', function(e) { console.log(e);console.log('err') });
+        // 登录成功的时候发信息到微信通知（Server酱）
+        console.log(username)
+        var push_bark_url;
+        if (username != '') {
+            username += '用户默默离开了';
+            push_bark_url = `https://api.day.app/MsrNtY7TVM9vXLqqL47UYh/${qs.escape(username)}?automaticallyCopy=1&copy=optional`;
+
+        } else {
+            push_bark_url = `https://api.day.app/MsrNtY7TVM9vXLqqL47UYh/${qs.escape("进来没干嘛就跑了")}?automaticallyCopy=1&copy=optional`;
+
+        }
+        https.get(push_bark_url, function (res_bark) {
+
+            res_bark.setEncoding('utf-8');
+            var code = res_bark.statusCode;
+            console.log(code)
+            if (code == 200) {
+                res_bark.on('data', function (data) {
+                    console.log(data);
+
+                });
+            } else {
+                console.log('失败');
+            }
+        }).on('error', function (e) { console.log(e); console.log('err') });
 
     });
 });

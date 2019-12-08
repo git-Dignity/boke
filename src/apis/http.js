@@ -3,7 +3,7 @@ import GLOBAL from './../components/tool/Global'
 
 //创建axios的一个实例 
 var instance = axios.create({
-    baseURL:GLOBAL.url_api,
+    baseURL: GLOBAL.url_api,
     timeout: 6000
 })
 
@@ -14,13 +14,13 @@ instance.interceptors.request.use(function (config) {
     return config;
 }, function (error) {
     // 对请求错误做些什么
-    
+
     return Promise.reject(error);
 });
 
 //----------------- 二、响应拦截器 忽略
 instance.interceptors.response.use(function (response) {
-    
+
     return response.data;
 }, function (error) {
     // 对响应错误做点什么
@@ -43,12 +43,11 @@ export default function (method, url, data = null) {
     } else if (method == 'get') {
         return instance.get(url, { params: data })
     } else if (method == 'delete') {
-        console.log(data.id,url)
-        return instance.delete(url+"/id="+data.id, { params: data })
-    }else if(method == 'put'){
-        return instance.put(url,data)
-    }else{
-        console.error('未知的method'+method)
+        return instance.delete(url, { params: data })
+    } else if (method == 'put') {
+        return instance.put(url, data)
+    } else {
+        console.error('未知的method' + method)
         return false
     }
 }

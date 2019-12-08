@@ -1,5 +1,5 @@
 var db = require('./db.js');
-var getInfo = require('./ipInfo.js');
+var getInfo = require('../tool/ipInfo.js');
 var encryptDecryptChar = require('../tool/encryptDecryptChar.js');
 // var sess = require('./session.js');
 const https = require('https');

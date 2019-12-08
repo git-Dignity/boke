@@ -63,8 +63,13 @@
 import BlogHeader from "./BlogHeader.vue";
 import BlogFooter from "./BlogFooter.vue";
 import jquery from "../../static/jquery-1.9.1.min";
-import qs from 'qs';
-import { ShowBlog,Delblog } from "./../apis/blog.js";
+import qs from "qs";
+import {
+  ShowBlog,
+  SearchBlog,
+  SelectCategory,
+  Delblog
+} from "./../apis/blog.js";
 export default {
   components: {
     BlogHeader,
@@ -82,28 +87,16 @@ export default {
       blogs: []
     };
   },
-  
-  created(){
-     console.log(this.GLOBAL.url_api)
-    this.$http.post(this.GLOBAL.url_api + '/blog/showblog')
-    .then(function(data){
-      // console.log(data);
-      this.blogs = data.body//初始化所有数据
-     
-      // this.$store.commit("currentPage",{pagenumL:0,pagenumR:5}); //初始化
-      
-    })
 
   created() {
     this.$http
       .post(this.GLOBAL.url_api + "/blog/showblog")
       .then(function(data) {
-
         this.blogs = data.body; //初始化所有数据
 
         // this.$store.commit("currentPage",{pagenumL:0,pagenumR:5}); //初始化
       });
-    // easy-mock
+    // easy-mock  测试接口数据
     //    this.$http.get('https://easy-mock.com/mock/5d0884e85fe0103ee3ddde4e/example/address')
     //    .then(function(data){
     //       console.log(data);
@@ -203,11 +196,10 @@ export default {
         this.GLOBAL.administrator
       ) {
         if (confirm("确认要删除？")) {
-          
-          let fgdf = await Delblog({
-        id: id,
-})
-          console.log(fgdf)
+          await Delblog({ id: id });
+          Delblog().then(result => {
+            this.$store.commit("del", id);
+          });
 
           // this.$axios
           //   .post(this.GLOBAL.url_api + "/blog/delblog", {
@@ -226,32 +218,24 @@ export default {
       }
       return;
     },
-    filteredBlogs() {
-      this.$axios
-        .post(this.GLOBAL.url_api + "/blog/searchblog", {
-          title: this.search
-        })
-        .then(res => {
-          console.log(res.data);
-          this.$store.commit("currentPage", res.data);
-        })
-        .catch(data => {
-          console.log(data);
-        });
+
+     
+
+      
+    async filteredBlogs() {
+      
+      //  用then就拿不到
+      // await SearchBlog({ title: this.search });
+      // SearchBlog().then(result => {
+      //   console.log(result);
+      //   this.$store.commit("currentPage", result);
+      // });
+
+      this.$store.commit("currentPage", await SearchBlog({title:this.search}))
     },
-    selectCategory(event, item) {
+    async selectCategory(event, item) {
       //change 触发事件
-      this.$axios
-        .post(this.GLOBAL.url_api + "/blog/selectCategory", {
-          categories: event
-        })
-        .then(res => {
-          console.log(res.data);
-          this.$store.commit("currentPage", res.data);
-        })
-        .catch(data => {
-          console.log(data);
-        });
+      this.$store.commit("currentPage", await SelectCategory({categories:event}))
     }
   },
   computed: {

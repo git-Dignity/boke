@@ -1,5 +1,5 @@
 var db = require('./db.js');
-var getInfo = require('./ipInfo.js');
+var getInfo = require('../tool/ipInfo.js');
 var util = require('util');
 var express = require('express');
 var app = express();

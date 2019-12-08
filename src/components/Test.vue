@@ -1,291 +1,125 @@
 <template>
-  <div>
-    <img :src="base64" />
-
-    <input type="file" name="file" accept="image/*" @change="uploadImg" />
-
-    <textarea id="textarea"></textarea>
-
-    <section>
-      <img
-        id="previewImg"
-        src="https://avatars1.githubusercontent.com/u/25993112?s=460&v=4"
-        alt="预览"
-      />
-      <div class="button" role="button">
-        选择图片试试看
-        <input
-          type="file"
-          name="file"
-          id="file"
-          class="upload-img"
-          accept="image/*"
-          @change.prevent="chooseImg()"
-        />
-      </div>
-    </section>
+  <div class="edit_container">
+    <quill-editor
+      v-model="content"
+      ref="myQuillEditor"
+      :options="editorOption"
+      @blur="onEditorBlur($event)"
+      @focus="onEditorFocus($event)"
+      @change="onEditorChange($event)"
+    ></quill-editor>
+    <button v-on:click="saveHtml">保存</button>
   </div>
 </template>
 
-<style>
-</style>
 <script>
-import jquery from "../../static/jquery-1.9.1.min";
+let Base64 = require("js-base64").Base64;
+// 图片推拽上传
+import { quillEditor } from "vue-quill-editor";
+import * as Quill from "quill"; //引入编辑器
+import { ImageDrop } from "quill-image-drop-module";
+Quill.register("modules/imageDrop", ImageDrop);
 
-import Clipic from "clipic";
-const clipic = new Clipic();
 export default {
+  name: "App",
   data() {
     return {
-      base64: "../image/1.png"
+      content: ``,
+      editorOption: {
+        modules: {
+          toolbar: [
+            ["bold", "italic", "underline", "strike"], //加粗，斜体，下划线，删除线
+            ["blockquote", "code-block"], //引用，代码块
+
+            [{ header: 1 }, { header: 2 }], // 标题，键值对的形式；1、2表示字体大小
+            [{ list: "ordered" }, { list: "bullet" }], //列表
+            [{ script: "sub" }, { script: "super" }], // 上下标
+            [{ indent: "-1" }, { indent: "+1" }], // 缩进
+            [{ direction: "rtl" }], // 文本方向
+
+            [{ size: ["small", false, "large", "huge"] }], // 字体大小
+            [{ header: [1, 2, 3, 4, 5, 6, false] }], //几级标题
+
+            [{ color: [] }, { background: [] }], // 字体颜色，字体背景颜色
+            [{ font: [] }], //字体
+            [{ align: [] }], //对齐方式
+
+            ["clean"], //清除字体样式
+            ["image", "video"] //上传图片、上传视频
+          ],
+          imageDrop: true,
+          // imageResize: {
+          //   displayStyles: {
+          //     width: "50px",
+          //     height: "50px"
+          //   }
+          // }
+        },
+        theme: "snow"
+      }
     };
   },
-  created() {},
-  mounted() {
-    var a = document.getElementById("textarea");
-    console.log(a);
+
+  created() {
+
+    this.$axios
+      .post(this.GLOBAL.url_api + "/blogComments/showComments", {
+        id: 117,
+        currentPage: 3, // 第几页
+        display: 5 // 每页显示条数
+      })
+      .then(data => {
+        data.data.forEach(element => {
+          element.commentsContent = Base64.decode(element.commentsContent);
+        });
+        this.CommentArea = data.data;
+      });
+  },
+  computed: {
+    editor() {
+      return this.$refs.myQuillEditor.quill;
+    }
   },
   methods: {
-    chooseImg(event) {
-      var files = document.getElementById("file").files[0];
+    onEditorReady(editor) {
+      // 准备编辑器
+    },
+    onEditorBlur() {}, // 失去焦点事件
+    // 禁用编辑器
+    onEditorFocus(val, editor) {
+      // 富文本获得焦点时的事件
+      console.log(val); // 富文本获得焦点时的内容
+      editor.enable(false); // 在获取焦点的时候禁用
+    },
+    onEditorChange() {}, // 内容改变事件
+    saveHtml: function(event) {
+      console.log(this.content)
+      // this.content = Base64.encode(this.content);
 
-      //        var files = event.files || event.dataTransfer.files
-
-      var reader = new FileReader();
-      reader.readAsDataURL(files);
-      reader.onload = e => {
-        clipic.getImage({
-          // width: 500,
-          // height: 400,
-          ratio: 16 / 9,
-          src: e.target.result,
-          // buttonText: ['Cancel', 'Reset', 'Done'],
-          onDone: function(e) {
-            console.log(document.getElementById("previewImg"));
-            document.getElementById("previewImg").src = e;
-          }
+      this.$axios
+        .post(this.GLOBAL.url_api + "/blogComments/comments", {
+          bokeId: 117,
+          commentsContent: this.content,
+          commentTime: new Date().toLocaleDateString(),
+          author: JSON.parse(localStorage.getItem("login")).username
+        })
+        .then(data => {
+          console.log(this.content)
+          // this.content = "";
+          // this.CommentArea =data.data;
         });
-      };
-      event.value = "";
     }
   }
 };
 </script>
 
-<style scoped>
-.header {
-  position: relative;
-  overflow: hidden;
-  background-color: rgba(7, 17, 27, 0.5);
-}
-.content-wrapper {
-  position: relative;
-  padding: 24px 12px 18px 24px;
-
-  font-size: 0; /*解决inline-block中间一个空格*/
-}
-.h-avatar {
-  display: inline-block;
-  vertical-align: top;
-}
-.h-avatar img {
-  border-radius: 2px;
-}
-.h-content {
-  display: inline-block;
-  margin-left: 16px;
-  color: #fff;
-}
-.h-title {
-  margin: 2px 0 8px 0;
-}
-.h-iconP {
-  vertical-align: top;
-  display: inline-block;
-  width: 30px;
-  height: 18px;
-  margin-right: 6px;
-
-  background-size: 30px 18px;
-  background-repeat: no-repeat;
-}
-.h-titleC {
-  font-size: 16px;
-  font-weight: bold;
-  line-height: 18px;
-}
-.h-description {
-  font-size: 12px;
-  font-weight: 200;
-  line-height: 12px;
-}
-.h-gonggao {
-  margin: 10px 0 2px 0;
-}
-.h-iconJ {
-  display: inline-block;
-  vertical-align: top;
-  width: 12px;
-  height: 12px;
-  margin-right: 4px;
-  background-size: 12px 12px;
-}
-.h-gonggaoJ {
-  font-size: 10px;
-  font-weight: 200;
-  line-height: 14px;
-}
-.h-aside {
-  position: absolute;
-  right: 12px;
-  bottom: 14px;
-  padding: 0 8px;
-  border-radius: 14px;
-  height: 24px;
-  line-height: 24px;
-  background-color: rgba(0, 0, 0, 0.2);
+<style>
+#app {
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #fff;
-}
-.h-supportsL {
-  vertical-align: top;
-  margin-right: 2px;
-  font-size: 10px;
-}
-.icon-keyboard_arrow_right {
-  font-size: 10px;
-  line-height: 24px;
-}
-/* 公告部分 */
-.content-gonggao {
-  position: relative;
-  height: 28px;
-  line-height: 28px;
-  padding: 0 26px 0 12px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  background-color: rgba(7, 17, 27, 0.2);
-  color: #fff;
-}
-.hg_icong {
-  vertical-align: top;
-  display: inline-block;
-  width: 22px;
-  height: 12px;
-  background-size: 22px 12px;
-  background-repeat: no-repeat;
-  margin-top: 7px;
-}
-.hg_desc {
-  font-size: 10px;
-  padding: 0 4px;
-  vertical-align: top;
-}
-.content-gonggao .icon-keyboard_arrow_right {
-  position: absolute;
-  right: 12px;
-  top: 0;
-  line-height: 28px;
-}
-/*背景图*/
-.bgkImg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  filter: blur(10px);
-  z-index: -1;
-}
-.bgkImg img {
-  width: 100%;
-  height: 100%;
-}
-/*详情弹框*/
-.detail {
-  position: fixed;
-  left: 0;
-  top: 0;
-  overflow: auto;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(7, 17, 27, 0.8);
-  z-index: 99;
-  color: #fff;
-  backdrop-filter: blur(10px);
-}
-.fade-enter-active,
-.fade-leave-active {
-  transition: all 0.7s;
-}
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.detail-wrapper {
-  width: 100%;
-  min-height: 100%;
-}
-.detail-main {
-  padding: 64px 0;
-}
-.sellerName {
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 32px;
-  text-align: center;
-}
-.starGroup {
-  text-align: center;
-  margin: 16px 0 28px 0;
-}
-.huiInfo {
-  display: flex;
-  width: 80%;
-  margin: 28px auto 24px auto;
-  font-size: 0;
-}
-.huiInfo .line {
-  flex: 1;
-  display: inline-block;
-  height: 1px;
-  background-color: rgba(255, 255, 255, 0.2);
-  margin: 6.3px 0;
-}
-.huiInfo .info {
-  padding: 0 12px;
-  font-size: 14px;
-  font-weight: 700;
-}
-.allHui {
-  width: 80%;
-  margin: 0 auto;
-  font-size: 0;
-}
-.allHui .h-iconJ {
-  width: 16px;
-  height: 16px;
-  background-size: 16px 16px;
-  margin-right: 6px;
-}
-.allHui .h-gonggaoJ {
-  font-size: 12px;
-  line-height: 16px;
-}
-.Detailbulletin {
-  width: 80%;
-  font-size: 12px;
-  font-weight: 200;
-  line-height: 24px;
-  margin: 0 auto;
-}
-.detail-close {
-  position: relative;
-  width: 32px;
-  height: 32px;
-  margin: -64px auto 0 auto;
-  font-size: 32px;
+  color: #2c3e50;
+  margin-top: 60px;
 }
 </style>
