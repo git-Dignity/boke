@@ -134,9 +134,9 @@
                 id="commentsContent"
                 v-model = "commentsContent"
                 placeholder="请留下您的足迹~"
-              ></b-form-textarea>
+              ></b-form-textarea> 
             </b-col>
-          </b-row>-->
+          </b-row>--> 
         </div>
         <div class="mt-3" style="margin-bottom:5%;">
           <b-button-group>
@@ -397,7 +397,6 @@ export default {
             showClose: true
           });
         })
-
 
       // this.$axios
       //   .post(this.GLOBAL.url_api + "/blog/updateboke", {

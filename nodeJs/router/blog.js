@@ -167,7 +167,7 @@ app.post('/selectCategory',function(req,res){
 
 
 //更新博客
-app.post('/updateboke',function(req,res){
+app.put('/updateboke',function(req,res){
     //var params = url.parse(req.url, true).query;  //parse将字符串转成对象,req.url="/?url=123&name=321"，true表示params是{url:"123",name:"321"}，false表示params是url=123&name=321
    
 	var id = req.body.id;
