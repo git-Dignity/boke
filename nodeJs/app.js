@@ -34,7 +34,9 @@ const upload = require('./router/upload.js');
 const log = require('./router/log.js');
 const sess = require('./utils/session.js');
 const setUp = require('./router/setUp.js');
-var dbInfo = require('./utils/dbInfo.js')
+var agency = require('./router/agency.js');
+var dbInfo = require('./utils/dbInfo.js');
+
 
 //var mime = require('mime'); //加载mime，为了判断你是什么文件的格式并加载进来
 
@@ -119,6 +121,8 @@ app.use('/music', music);
 
 app.use('/upload', upload);
 
+app.use('/agency',agency);
+
 //日志
 app.use('/log', log);
 
@@ -175,10 +179,10 @@ wss.on('connection', (wsConnect) => {
         var push_bark_url;
         if (username != '') {
             username += '用户默默离开了';
-            push_bark_url = `https://api.day.app/MsrNtY7TVM9vXLqqL47UYh/${qs.escape(username)}?automaticallyCopy=1&copy=optional`;
+            push_bark_url = `https://api.day.app/2vFDjFLDeBUZAhviBGsXWG/${qs.escape(username)}?automaticallyCopy=1&copy=optional`;
 
         } else {
-            push_bark_url = `https://api.day.app/MsrNtY7TVM9vXLqqL47UYh/${qs.escape("进来没干嘛就跑了")}?automaticallyCopy=1&copy=optional`;
+            push_bark_url = `https://api.day.app/2vFDjFLDeBUZAhviBGsXWG/${qs.escape("进来没干嘛就跑了")}?automaticallyCopy=1&copy=optional`;
 
         }
         https.get(push_bark_url, function (res_bark) {

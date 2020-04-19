@@ -62,7 +62,7 @@
 <script>
 import BlogHeader from "./BlogHeader.vue";
 import BlogFooter from "./BlogFooter.vue";
-import jquery from "../../static/jquery-1.9.1.min";
+import jquery from "../../static/jquery-1.9.1.min"; 
 import qs from "qs";
 import {
   ShowBlog,

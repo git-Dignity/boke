@@ -48,6 +48,8 @@
       <el-slider v-show="!controlList.noVolume" v-model="volume" :format-tooltip="formatVolumeToolTip" @change="changeVolume" class="slider"></el-slider>
       
       <a :href="url" v-show="!controlList.noDownload" target="_blank" class="download" download>下载</a>
+
+      <el-button v-if="disPlayIsAllBtn"  type="text" @click="AllPlayOrSingle">{{playIsAll | allOrSingle}}</el-button>
     
     </blockquote>
 
@@ -82,7 +84,7 @@
 
   export default {
     props: {
-      theUrl: {
+      theUrl: { 
         type: String,
         required: true,
       },
@@ -126,6 +128,9 @@
         volume: 100,  // 音频音量控制
         speeds: this.theSpeeds,
 
+        playIsAll:false, //随机或者单曲
+        disPlayIsAllBtn:true,  //是否显示随机按钮
+
         controlList: {
           // 不显示下载
           noDownload: false,
@@ -153,7 +158,11 @@
             
         }
       
-      this.setControlList();      
+      this.setControlList();   
+      if(this.url == "https://zhengzemin.cn/nodeJs/audio/说好不哭-周杰伦.m4a"){
+        this.disPlayIsAllBtn = false;
+      }
+      
     },
     methods: {
       setControlList () {
@@ -205,6 +214,9 @@
       },
       startPlayOrPause() {
         return this.audio.playing ? this.pausePlay() : this.startPlay()
+      },
+      AllPlayOrSingle() {
+        return this.playIsAll ? this.playAll() : this.playSingle()
       },
       // 开始播放
 
@@ -261,18 +273,36 @@
         // console.log('timeupdate')
         // console.log(res)
         this.audio.currentTime = res.target.currentTime
-        this.sliderTime = parseInt(this.audio.currentTime / this.audio.maxTime * 100)
+        this.sliderTime = parseInt(this.audio.currentTime / this.audio.maxTime * 100);
+        // playIsAll单曲循环、播放中、this.sliderTime是100
+        if(this.playIsAll && this.$refs.audio.paused && this.sliderTime===100){
+          this.$refs.audio.play();
+        }
+        this.$emit("onTimeupdate",this.sliderTime);
       },
       // 当加载语音流元数据完成后，会触发该事件的回调函数
       // 语音元数据主要是语音的长度之类的数据
       onLoadedmetadata(res) {   // 获取音频总时长
         // console.log('loadedmetadata')
-//        console.log(res)    //可以打开看看
+      //  console.log(res)    //可以打开看看
         this.audio.waiting = true;  // false
         this.audio.maxTime = parseInt(res.target.duration)
+    
       },
       close(){
           this.$emit("musicClose","0");
+        },
+        //播放全部
+        playAll(){
+          this.playIsAll = false;
+          // console.log('all')
+          this.$emit("playAll",1);
+        },
+        //单曲
+        playSingle(){
+          this.playIsAll = true;
+          // console.log('single');
+          this.$emit("playSingle",2);
         }
     },
     filters: {
@@ -289,6 +319,9 @@
       },
       transSpeed(value) {
         return '快进: x' + value;
+      },
+      allOrSingle(value) {
+        return value ? '随机' : '单曲'
       }
     },
     mounted(){
@@ -329,7 +362,7 @@
   }
   .slider {
     display: inline-block;
-    width: 100px;
+    width: 85px;
     position: relative;
     top: 14px;
     margin-left: 15px;

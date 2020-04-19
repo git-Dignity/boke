@@ -26,6 +26,7 @@ import 'viewerjs/dist/viewer.css'
 import Vconsole from 'vconsole';
 
 
+
 //引用全局变量
 import global_ from './components/tool/Global'
 Vue.prototype.GLOBAL = global_
@@ -126,3 +127,5 @@ new Vue({
 // https://blog.csdn.net/Mote123/article/details/92635850
 
 //移动端调试vConsole:https://mkblog.cn/1852/comment-page-1/
+
+// 使用Iconfont(阿里图标库)：https://blog.csdn.net/qq_32113629/article/details/79740949

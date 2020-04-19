@@ -9,6 +9,8 @@
               
               <router-link to = "/music" exact>天歌</router-link>
 
+              <router-link to = "/agency" exact>代办</router-link>
+
               <router-link to = "/setUp" exact>设置</router-link>
           </li>
 
@@ -23,7 +25,7 @@
 <script>
     import jquery from '../../static/jquery-1.9.1.min'
     import TemporarilyRun from './TemporarilyRun.vue'
-
+    import {JsTool,Hello} from 'javascript-tool-class/src/index.js'
     
     export default{
         name : 'blog-header',
@@ -34,6 +36,10 @@
             return{
             }
         },
+        created(){
+            let tool = new JsTool()
+            console.log(tool.test())
+        }
     
     }
 </script>

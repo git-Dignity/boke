@@ -116,16 +116,16 @@
           <h2>发表评论</h2>
           <input v-model="username" readonly="true" id="username" />
 
-            <div class="edit_container">
-              <quill-editor
-                v-model="commentsContent"
-                ref="myQuillEditor"
-                :options="editorOption"
-                @blur="onEditorBlur($event)"
-                @focus="onEditorFocus($event)"
-                @change="onEditorChange($event)"
-              ></quill-editor>
-            </div>
+          <div class="edit_container">
+            <quill-editor
+              v-model="commentsContent"
+              ref="myQuillEditor"
+              :options="editorOption"
+              @blur="onEditorBlur($event)"
+              @focus="onEditorFocus($event)"
+              @change="onEditorChange($event)"
+            ></quill-editor>
+          </div>
 
           <!-- <textarea id="commentsContent" v-model="commentsContent" placeholder="请留下您的足迹~" /> -->
           <!--    <b-row class="mt-2" style="width:100%;" >
@@ -159,8 +159,9 @@ import BlogHeader from "./BlogHeader.vue";
 import VueStar from "vue-star";
 import pagination from "./utils/pagination.vue";
 import jquery from "../../static/jquery-1.9.1.min";
-// import layuiAll from '../../static/layui/layui'
-// import flow from "../../static/layui/src/lay/modules/flow"
+import { Updateboke } from "./../apis/blog.js"
+import { Comments, ShowComments, Delcomments } from "./../apis/blogComments.js";
+import { LikeInsert, LikeShow } from "./../apis/commentsLike.js";
 
 // 图片推拽上传
 import { quillEditor } from "vue-quill-editor";
@@ -196,7 +197,7 @@ export default {
 
       userArr: {},
       //富文本块
-            editorOption: {
+      editorOption: {
         modules: {
           toolbar: [
             ["bold", "italic", "underline", "strike"], //加粗，斜体，下划线，删除线
@@ -218,7 +219,7 @@ export default {
             ["clean"], //清除字体样式
             ["image", "video"] //上传图片、上传视频
           ],
-          imageDrop: true,
+          imageDrop: true
           // imageResize: {
           //   displayStyles: {
           //     width: "50px",
@@ -264,8 +265,6 @@ export default {
         //   element.commentsContent = Base64.decode(element.commentsContent);
         // });
 
-
-
         this.$store.commit("commentsPage", this.CommentArea);
 
         this.username =
@@ -298,45 +297,79 @@ export default {
     }
   },
   methods: {
-    pagechange(currentPage) {
+    async pagechange(currentPage) {
       console.log(currentPage);
       this.current = currentPage;
       // ajax请求, 向后台发送 currentPage, 来获取对应的数据
-      this.$axios
-        .post(this.GLOBAL.url_api + "/blogComments/showComments", {
-          id: this.id,
-          currentPage: currentPage, // 第几页
-          display: this.display // 每页显示条数
-        })
-        .then(data => {
-          var dataLeng = data.data.length - 1;
-          this.total = data.data[dataLeng].id; // 总数
-          this.current = currentPage;
-          data.data.pop();
-          this.CommentArea = data.data;
+      const ShowCommentsList = await ShowComments({
+        id: this.id,
+        currentPage: currentPage, // 第几页
+        display: this.display // 每页显示条数
+      });
 
-          for (var c = 0; c < this.CommentArea.length; c++) {
-            for (var u = 0; u < this.userArr.length; u++) {
-              if (this.CommentArea[c].id == this.userArr[u].commentsId) {
-                console.log(this.CommentArea[c].id);
-                this.CommentArea[c].userN += this.userArr[u].username;
-              }
-            }
+      var dataLeng = ShowCommentsList.length - 1;
+      this.total = ShowCommentsList[dataLeng].id; // 总数
+      this.current = currentPage;
+      ShowCommentsList.pop();
+      this.CommentArea = ShowCommentsList;
+
+      for (var c = 0; c < this.CommentArea.length; c++) {
+        for (var u = 0; u < this.userArr.length; u++) {
+          if (this.CommentArea[c].id == this.userArr[u].commentsId) {
+            console.log(this.CommentArea[c].id);
+            this.CommentArea[c].userN += this.userArr[u].username;
           }
+        }
+      }
 
-          //解码
-        // this.CommentArea.forEach(element => {
-        //   element.commentsContent = Base64.decode(element.commentsContent);
-        // });
+      //解码
+      // this.CommentArea.forEach(element => {
+      //   element.commentsContent = Base64.decode(element.commentsContent);
+      // });
 
-          this.$store.commit("commentsPage", this.CommentArea);
-        })
-        .catch(function(e) {
-          console.log(e);
-        });
+      this.$store.commit("commentsPage", this.CommentArea);
+
+      // this.$axios
+      //   .post(this.GLOBAL.url_api + "/blogComments/showComments", {
+      //     id: this.id,
+      //     currentPage: currentPage, // 第几页
+      //     display: this.display // 每页显示条数
+      //   })
+      //   .then(data => {
+      //     console.log(data.data);
+      //     var dataLeng = data.data.length - 1;
+      //     this.total = data.data[dataLeng].id; // 总数
+      //     this.current = currentPage;
+      //     data.data.pop();
+      //     this.CommentArea = data.data;
+
+      //     for (var c = 0; c < this.CommentArea.length; c++) {
+      //       for (var u = 0; u < this.userArr.length; u++) {
+      //         if (this.CommentArea[c].id == this.userArr[u].commentsId) {
+      //           console.log(this.CommentArea[c].id);
+      //           this.CommentArea[c].userN += this.userArr[u].username;
+      //         }
+      //       }
+      //     }
+
+      //     //解码
+      //   // this.CommentArea.forEach(element => {
+      //   //   element.commentsContent = Base64.decode(element.commentsContent);
+      //   // });
+
+      //     this.$store.commit("commentsPage", this.CommentArea);
+      //   })
+      //   .catch(function(e) {
+      //     console.log(e);
+      //   });
     },
     singleEdit() {
-      alert("亲，可以点击修改数据啦~");
+      this.$message({
+            message: "亲，可以点击修改数据啦~",
+            type: "success",
+            center: true,
+            showClose: true
+          });
 
       var input = document.getElementsByTagName("input");
       var textarea = document.getElementsByTagName("textarea");
@@ -347,88 +380,120 @@ export default {
         input[i].style.borderColor = "#0f0";
       }
     },
-    singleKeep(id) {
-      this.$axios
-        .post(this.GLOBAL.url_api + "/blog/updateboke", {
+    async singleKeep(id) {
+      await Updateboke({
           id: id,
           title: this.blog.title,
           content: this.blog.content,
           categories: this.blog.categories,
           author: this.blog.author
         })
-        .then(data => {
-          alert("亲，你的数据修改成功啦~");
-          console.log(data);
+        Updateboke().then(res =>{
+          // console.log(res);
+          this.$message({
+            message: res.msg,
+            type: "success",
+            center: true,
+            showClose: true
+          });
         })
-        .catch(function(e) {
-          console.log(e);
-        });
+
+
+      // this.$axios
+      //   .post(this.GLOBAL.url_api + "/blog/updateboke", {
+      //     id: id,
+      //     title: this.blog.title,
+      //     content: this.blog.content,
+      //     categories: this.blog.categories,
+      //     author: this.blog.author
+      //   })
+      //   .then(data => {
+      //     alert("亲，你的数据修改成功啦~");
+      //     console.log(data);
+      //   })
+      //   .catch(function(e) {
+      //     console.log(e);
+      //   });
     },
-    zan(data) {
-      //                console.log(data)
+    async zan(data) {
       var userArrNew = [];
-      this.$axios
-        .post(this.GLOBAL.url_api + "/commentsLike/likeInsert", {
-          commentsId: document.getElementById(data).firstElementChild.innerText,
-          loginId: JSON.parse(localStorage.getItem("login")).username
-        })
-        .then(data => {
-          //                    console.log(data)
-          this.userArr = data.data;
+      await LikeInsert({
+        commentsId: document.getElementById(data).firstElementChild.innerText,
+        loginId: JSON.parse(localStorage.getItem("login")).username
+      });
+      LikeInsert().then(async resLikeInsert => {
+        // console.log(resLikeInsert);
+        this.userArr = resLikeInsert;
 
-          //更新点赞次数到comments表
-          this.$axios
-            .post(this.GLOBAL.url_api + "/commentsLike/likeShow")
-            .then(data => {
-              //                        console.log(data);
-              //在次查询表中的数据
-              this.$axios
-                .post(this.GLOBAL.url_api + "/blogComments/showComments", {
-                  id: this.id,
-                  currentPage: this.current, // 第几页
-                  display: this.display // 每页显示条数
-                })
-                .then(data => {
-                  //                            console.log(data.data)
-                  var dataLeng = data.data.length - 1;
-                  this.total = data.data[dataLeng].id; // 总数
-                  data.data.pop();
-                  this.CommentArea = data.data;
+        //更新点赞次数到comments表
+        await LikeShow();
+        LikeShow().then(async resLikeShow => {
+          // console.log(resLikeShow);
 
-                  // console.log(this.userArr)
-                  console.log("=====");
+          //在次查询表中的数据
+          var resShowComments = await ShowComments({
+            id: this.id,
+            currentPage: this.current, // 第几页
+            display: this.display // 每页显示条数
+          });
 
-                  //                            for(var c = 0; c < this.CommentArea.length; c++){
-                  //
-                  //
-                  //                                for(var u = 0; u < this.userArr.length; u++){
-                  //                                    if(this.CommentArea[c].id == this.userArr[u].commentsId){
-                  ////                                           console.log(this.CommentArea[c].id)
-                  //                                        this.CommentArea[c].usernames.push(this.userArr[u].username);
-                  ////                                           this.CommentArea[c].userN = this.userArr[u].username;
-                  //
-                  //                                    }
-                  //                                }
-                  //                            }
+          // console.log(resShowComments);
+          var dataLeng = resShowComments.length - 1;
+          this.total = resShowComments[dataLeng].id; // 总数
+          resShowComments.pop();
+          this.CommentArea = resShowComments;
 
-                  console.log(this.CommentArea);
+          // console.log(this.userArr)
 
-                  this.$store.commit("commentsPage", this.CommentArea);
-                })
-                .catch(function(e) {
-                  console.log(e);
-                });
-            })
-            .catch(function(e) {
-              console.log(e);
-            });
-        })
-        .catch(function(e) {
-          console.log(e);
+          console.log(this.CommentArea);
+
+          this.$store.commit("commentsPage", this.CommentArea);
         });
+      });
+
+      //  this.$axios
+      //   .post(this.GLOBAL.url_api + "/commentsLike/likeInsert", {
+      //     commentsId: document.getElementById(data).firstElementChild.innerText,
+      //     loginId: JSON.parse(localStorage.getItem("login")).username
+      //   })
+      //   .then(data => {
+      //     console.log(data);
+      //     this.userArr = data.data;
+
+      //     //更新点赞次数到comments表
+
+      //     this.$axios
+      //       .post(this.GLOBAL.url_api + "/commentsLike/likeShow")
+      //       .then(data => {
+      //         // console.log(data);
+      //         //在次查询表中的数据
+      //         this.$axios
+      //           .post(this.GLOBAL.url_api + "/blogComments/showComments", {
+      //             id: this.id,
+      //             currentPage: this.current, // 第几页
+      //             display: this.display // 每页显示条数
+      //           })
+      //           .then(data => {
+      //             //                            console.log(data.data)
+      //             var dataLeng = data.data.length - 1;
+      //             this.total = data.data[dataLeng].id; // 总数
+      //             data.data.pop();
+      //             this.CommentArea = data.data;
+
+      //             // console.log(this.userArr)
+
+      //             console.log(this.CommentArea);
+
+      //             this.$store.commit("commentsPage", this.CommentArea);
+      //           });
+      //       });
+      //   })
+      //   .catch(function(e) {
+      //     console.log(e);
+      //   });
     },
     // 删除评论
-    Delcomments(e) {
+    async Delcomments(e) {
       console.log(e.target.parentNode);
       console.log(e.target.parentNode.parentNode.lastElementChild.innerText);
 
@@ -437,21 +502,40 @@ export default {
         this.GLOBAL.administrator
       ) {
         if (confirm("确认要删除？")) {
-          this.$axios
-            .post(this.GLOBAL.url_api + "/blogComments/delcomments", {
-              id: e.target.parentNode.parentNode.lastElementChild.innerText
-            })
-            .then(data => {
-              // 数据库已经删除，节点未删除（用vuex解决)   parentNode这个还有些获取不到，
-              this.$store.commit(
-                "delcomments",
-                e.target.parentElement.parentElement.lastElementChild.innerText
-              );
-              console.log(data);
-            })
-            .catch(function(e) {
-              console.log(e);
-            });
+          await Delcomments({
+            id: e.target.parentNode.parentNode.lastElementChild.innerText
+          });
+          Delcomments().then(res => {
+            // 数据库已经删除，节点未删除（用vuex解决)   parentNode这个还有些获取不到，
+            this.$store.commit(
+              "delcomments",
+              e.target.parentElement.parentElement.lastElementChild.innerText
+            );
+
+            this.$message({
+            message: "删除成功！",
+            type: "success",
+            center: true,
+            showClose: true
+          });
+            console.log(res);
+          });
+
+          // this.$axios
+          //   .post(this.GLOBAL.url_api + "/blogComments/delcomments", {
+          //     id: e.target.parentNode.parentNode.lastElementChild.innerText
+          //   })
+          //   .then(data => {
+          //     // 数据库已经删除，节点未删除（用vuex解决)   parentNode这个还有些获取不到，
+          //     this.$store.commit(
+          //       "delcomments",
+          //       e.target.parentElement.parentElement.lastElementChild.innerText
+          //     );
+          //     console.log(data);
+          //   })
+          //   .catch(function(e) {
+          //     console.log(e);
+          //   });
         }
       } else {
         this.$message.error("非管理员无权删除");
@@ -459,56 +543,98 @@ export default {
       return;
     },
     reply() {},
-    comments(id) {
+    async comments(id) {
       if (this.commentsContent != "") {
-        console.log(this.commentsContent)
+        // console.log(this.commentsContent);
         // this.commentsContent = this.Base64.encode(this.commentsContent);
-        this.$axios
-          .post(this.GLOBAL.url_api + "/blogComments/comments", {
-            bokeId: id,
-            commentsContent: this.commentsContent,
-            commentTime: this.commentTime,
-            author: this.username
-          })
-          .then(data => {
-            this.$message({
-              message: "亲，你的评论已飞速上传！",
-              type: "success",
-              center: true,
-              showClose: true
-            });
-            this.commentsContent = "";
-
-            this.$axios
-              .post(this.GLOBAL.url_api + "/blogComments/showComments", {
-                id: this.id,
-                currentPage: this.current, // 第几页
-                display: this.display // 每页显示条数
-              })
-              .then(data => {
-                var dataLeng = data.data.length - 1;
-                this.total = data.data[dataLeng].id; // 总数
-
-                data.data.pop();
-
-                this.CommentArea = data.data;
-console.log(this.CommentArea)
-                for (var c = 0; c < this.CommentArea.length; c++) {
-                  for (var u = 0; u < this.userArr.length; u++) {
-                    if (this.CommentArea[c].id == this.userArr[u].commentsId) {
-                      console.log(this.CommentArea[c].id);
-                      this.CommentArea[c].userN = this.userArr[u].username;
-                    }
-                  }
-                }
-console.log(this.CommentArea)
-                this.iscomments = true;
-                this.$store.commit("commentsPage", this.CommentArea);
-              });
-          })
-          .catch(function(e) {
-            console.log(e);
+        await Comments({
+          bokeId: id,
+          commentsContent: this.commentsContent,
+          commentTime: this.commentTime,
+          author: this.username
+        });
+        Comments().then(async result => {
+          this.$message({
+            message: "亲，你的评论已飞速上传！",
+            type: "success",
+            center: true,
+            showClose: true
           });
+          this.commentsContent = "";
+
+          var showCommentsList = await ShowComments({
+            id: this.id,
+            currentPage: this.current, // 第几页
+            display: this.display // 每页显示条数
+          });
+
+          var dataLeng = showCommentsList.length - 1;
+          this.total = showCommentsList[dataLeng].id; // 总数
+
+          showCommentsList.pop();
+
+          this.CommentArea = showCommentsList;
+          // console.log(this.CommentArea);
+          for (var c = 0; c < this.CommentArea.length; c++) {
+            for (var u = 0; u < this.userArr.length; u++) {
+              if (this.CommentArea[c].id == this.userArr[u].commentsId) {
+                console.log(this.CommentArea[c].id);
+                this.CommentArea[c].userN = this.userArr[u].username;
+              }
+            }
+          }
+          console.log(this.CommentArea);
+          this.iscomments = true;
+          this.$store.commit("commentsPage", this.CommentArea);
+        });
+
+        // this.$axios
+        //   .post(this.GLOBAL.url_api + "/blogComments/comments", {
+        //     bokeId: id,
+        //     commentsContent: this.commentsContent,
+        //     commentTime: this.commentTime,
+        //     author: this.username
+        //   })
+        //   .then(data => {
+        //     console.log(data)
+        //     this.$message({
+        //       message: "亲，你的评论已飞速上传！",
+        //       type: "success",
+        //       center: true,
+        //       showClose: true
+        //     });
+        //     this.commentsContent = "";
+
+        //     this.$axios
+        //       .post(this.GLOBAL.url_api + "/blogComments/showComments", {
+        //         id: this.id,
+        //         currentPage: this.current, // 第几页
+        //         display: this.display // 每页显示条数
+        //       })
+        //       .then(data => {
+        //         var dataLeng = data.data.length - 1;
+        //         this.total = data.data[dataLeng].id; // 总数
+
+        //         data.data.pop();
+
+        //         this.CommentArea = data.data;
+        //         console.log(this.CommentArea);
+        //         for (var c = 0; c < this.CommentArea.length; c++) {
+        //           for (var u = 0; u < this.userArr.length; u++) {
+        //             if (this.CommentArea[c].id == this.userArr[u].commentsId) {
+        //               console.log(this.CommentArea[c].id);
+        //               this.CommentArea[c].userN = this.userArr[u].username;
+        //             }
+        //           }
+        //         }
+        //         console.log(this.CommentArea);
+        //         this.iscomments = true;
+        //         this.$store.commit("commentsPage", this.CommentArea);
+        //       });
+        //   })
+        //   .catch(function(e) {
+        //     console.log(e);
+        //   });
       } else {
         alert("亲，评论内容为空，请评论~");
       }
@@ -516,7 +642,7 @@ console.log(this.CommentArea)
     //富文本块
     onEditorReady(editor) {
       // 准备编辑器
-      console.log(this.commentsContent)
+      console.log(this.commentsContent);
     },
     onEditorBlur() {}, // 失去焦点事件
     // 禁用编辑器
@@ -525,8 +651,7 @@ console.log(this.CommentArea)
       // console.log(val); // 富文本获得焦点时的内容
       // editor.enable(false); // 在获取焦点的时候禁用
     },
-    onEditorChange() {}, // 内容改变事件
-    
+    onEditorChange() {} // 内容改变事件
   },
 
   mounted() {
@@ -731,7 +856,7 @@ textarea::-webkit-input-placeholder {
   background-color: rgba(246, 246, 246, 0.2);
   @include rounded-corners(5%);
   h3 {
-    @include fontFamily(cursive) ;
+    @include fontFamily(cursive);
     color: rgba(255, 69, 0, 0.7);
   }
   ul li {
@@ -749,19 +874,18 @@ textarea::-webkit-input-placeholder {
           vertical-align: middle;
           display: inline-block;
         }
-        
       }
       .commentTime {
-          font-size: 12px;
-          color: #b1b1b1;
-        }
+        font-size: 12px;
+        color: #b1b1b1;
+      }
     }
     img {
       width: 20px;
       margin-bottom: 70px;
       height: 20px;
     }
-    .CommentImg{
+    .CommentImg {
       margin-bottom: 0;
       width: 35px;
       height: 35px;
@@ -774,20 +898,18 @@ textarea::-webkit-input-placeholder {
     margin: 8% 0;
 
     span {
-      
       padding-left: 8px;
     }
   }
-  li>span:first-child{
+  li > span:first-child {
     font-size: 16px;
     font-weight: 700;
     vertical-align: middle;
     color: #484848;
   }
- 
 }
 
-.ql-editor{
+.ql-editor {
   padding-left: 45px;
 }
 
@@ -805,3 +927,5 @@ textarea::-webkit-input-placeholder {
 <!--https://github.com/OYsun/VueStar/blob/master/README-ZH.MD-->
 
 <!--https://cloud.tencent.com/developer/article/1124181-->
+
+<!-- Vue基于vue-quill-editor富文本编辑器使用心得：https://www.cnblogs.com/ZaraNet/p/10209226.html-->

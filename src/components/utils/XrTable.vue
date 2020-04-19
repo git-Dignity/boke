@@ -110,8 +110,9 @@ export default {
     let {tableHeaderTable} = this.$refs;
     console.log(this.htmlWidth)
     setTimeout(()=>{
-        if(this.htmlWidth<400){
-            this.tableBodyWidth = parseInt(window.getComputedStyle(tableHeaderTable).width) + 'px';
+        if(this.htmlWidth<415){
+            this.tableBodyWidth = parseInt(window.getComputedStyle(tableHeaderTable).width)+400 + 'px';
+            // 移动端还是太窄了，多加上200px
         }
     },1)
     

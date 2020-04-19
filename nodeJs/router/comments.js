@@ -17,7 +17,7 @@ app.post('/comments',function(req,res){
     	
 		db(`insert into comments(bokeId,commentsContent,author,commentTime)values('${bokeId}','${commentsContent}','${author}','${commentTime}')`,(err,IntoData)=>{
 			if(err){
-				console.log(err);
+				console.log(err); 
 				res.send({msg:'数据添加失败'}).end();
 			}
 			else{
@@ -39,9 +39,9 @@ app.post('/showComments',function(req,res){
     var currentPage = req.body.currentPage;  // 第几页
     var display = req.body.display;  // 每页显示条数
     var currentPageA = display*(currentPage-1);  
-//    console.log(bokeId)
-//    console.log(currentPage)
-//    console.log(display)
+   console.log(bokeId)
+   console.log(currentPage)
+   console.log(display)
     
     
     if(currentPage == '' || currentPage == undefined){
@@ -73,12 +73,13 @@ app.post('/showComments',function(req,res){
     }
     
 })
-
+ 
 
 //删除评论
-app.post('/delcomments',function(req,res){
+app.delete('/delcomments',function(req,res){
 	
-	var id = req.body.id;
+	// var id = req.body.id;
+	var id = req.param("id");
     console.log(id)
 	db(`delete from comments where id = '${id}'`,function(err,data){
 		if(err){

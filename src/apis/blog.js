@@ -6,11 +6,11 @@ import req from './http.js'
 export const Addboke =params=>req('post','/blog/addboke',params)
 //在这里定义了一个登陆的接口，把登陆的接口暴露出去给组件使用
 export const ShowBlog =params=>req('post','/blog/showblog',params)
-//这里使用了箭头函数，转换一下写法：
+//这里使用了箭头函数，转换一下写法： 
 //export const LOGIN=function(req){
 //    return req('post','/operator/login',params)
 //}
-
+ 
 export const Singleblog =params=>req('get','/blog/singleblog',params)
 
 //定义注册接口

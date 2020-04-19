@@ -14,7 +14,10 @@
             :theUploader="item.uploader"
             :theUploadTime="item.uploadTime"
             @musicClose="closeMusic"
-            @audioState="audioState($event)"
+            @audioState="audioState($event)" 
+            @onTimeupdate="onTimeupdate"
+            @playAll = "playAll"
+            @playSingle = "playSingle"
           />
         </div>
       </div>
@@ -37,19 +40,58 @@ export default {
         }
       ],
       audioshow: false,
-      audioani: ""
+      audioani: "",
+      isAllOrSingle:2,
+      audioIndex:1,   //当前的歌曲在vuex的audiosPage排在第几位
+      audioRandomIndex:1,
+      asd:[
+        {
+          url:"./../../static/audio/gs.mp3",
+          controlList: "onlyOnePlaying",
+          uploader: "周杰伦",
+          uploadTime: "2019/05/20"
+        },
+        {
+          url:"./../../static/audio/1.mp3",
+          controlList: "onlyOnePlaying",
+          uploader: "12",
+          uploadTime: "2019/05/203"
+        }
+      ]
     };
   },
   computed: {
     musicPage() {
-      return this.$store.state.musicPage;
-    }
+      return this.$store.state.musicPage; 
+    },
+    // findThisAudioIndex(){
+    //   //为了不让下一首歌播放当前的歌曲
+    //       if(this.$store.state.audiosPage.length!=0){
+    //           this.$store.state.audiosPage.forEach((element,index) => {
+    //             if(this.$store.state.musicPage.url===element.url){
+    //               console.log(element);
+    //               if(index<4){
+    //                 this.audioIndex == index++;
+    //                 return index++;
+    //               }else{
+    //                 this.audioIndex == index--;
+    //                 return index--;
+    //               }
+    //               console.log(index)
+    //             }
+    //           });
+    //       }
+    //       return this.audioIndex;
+    // }
   },
   components: {
     VueAudio
   },
   created() {
     // console.log(this.audioshow)
+    console.log(this.$store.state.audiosPage)
+      
+      
   },
   methods: {
     closeMusic(data) {
@@ -64,16 +106,103 @@ export default {
       } else {
         this.audioani = "";
       }
+    },
+    random(min, max) {
+      return Math.floor(Math.random() * (max - min)) + min;
+    },
+    findThisAudioIndex(){
+      return this.$store.state.audiosPage.findIndex(n => n.url === this.$store.state.musicPage.url) 
+        // if(this.$store.state.audiosPage.length!=0){
+        //       this.$store.state.audiosPage.forEach((element,index) => {
+        //         if(this.$store.state.musicPage.url===element.url){
+        //           this.audioIndex == index;
+        //           console.log(index)
+        //           return index;
+        //         }
+        //       });
+        //   }
+        //   return this.audioIndex;
+    },
+    audioRandomIsThisAudio(audioRandomIndex,thisAudioIndex){
+      if(audioRandomIndex===thisAudioIndex){
+          return this.audioRandomIsThisAudio(this.random(0, this.$store.state.audiosPage.length),thisAudioIndex)
+        }else{
+          return audioRandomIndex;
+        }
+    },
+    onTimeupdate(data){
+      // console.log(this.isAllOrSingle)
+      // console.log(this.item);
+     
+      if(data==100){
+        if(this.isAllOrSingle===1){
+          //代办：就是随机播放，要是下一首歌还是当前的歌就不会播放，考虑换下随机算法
+          //为了不让下一首歌播放当前的歌曲
+          // if(this.$store.state.audiosPage.length!=0){
+          //     this.$store.state.audiosPage.forEach((element,index) => {
+          //       if(this.$store.state.musicPage.url===element.url){
+          //         console.log(element);
+          //         console.log(this.$store.state.musicPage)
+          //         if(index<4){
+          //           // this.audioIndex == index++;
+          //           this.$store.commit("musicPage",this.$store.state.audiosPage[index++])
+          //           console.log(this.$store.state.audiosPage[index++])
+          //           console.log(this.$store.state.musicPage)
+          //         }else{
+          //           // this.audioIndex == index--;
+          //           this.$store.commit("musicPage",this.$store.state.audiosPage[index--])
+          //         }
+          //         console.log(index)
+          //       }
+          //     });
+          // }
+          this.findThisAudioIndex();
+          console.log(this.audioIndex)
+          this.audioRandomIndex = this.random(0, this.$store.state.audiosPage.length);
+          //使用递归，这样才不会当前播放和下一曲的索引会相同
+          this.audioRandomIndex = this.audioRandomIsThisAudio(this.audioRandomIndex,this.findThisAudioIndex())
+          // if(this.audioRandomIndex===this.findThisAudioIndex()){
+          //   this.audioRandomIndex = this.random(0, this.$store.state.audiosPage.length-1)
+          // }
+          console.log(this.findThisAudioIndex())
+          console.log(this.audioRandomIndex)
+          this.$store.commit("musicPage",this.$store.state.audiosPage[this.audioRandomIndex])
+          console.log(this.$store.state.musicPage)
+          
+          //随机，但是有个bug，下一曲随机播放和当前的歌曲一样就不播放了
+            // this.$store.commit("musicPage",this.$store.state.audiosPage[this.random(0, this.$store.state.audiosPage.length-1)])
+        }else if(this.isAllOrSingle===2){
+          // console.log(this.item[1])
+          //  console.log(this.$store.state.musicPage)
+          this.$store.commit("musicPage",this.$store.state.musicPage)
+        }
+        
+      }
+    },
+    //随机播放
+    playAll(data){
+      // 1
+      this.isAllOrSingle = data;
+      // console.log(data)
+    },
+    //单曲循环
+    playSingle(data){
+      // 2
+      this.isAllOrSingle = data;
+      // console.log(data); 
     }
   },
 
   watch: {
+ 
     musicPage(n, o) {
       // console.log(n)
       // console.log(o)
 
-      var testaudio = document.getElementById("test-audio");
+      
 
+      var testaudio = document.getElementById("test-audio");
+      // console.log(testaudio.childNodes)
       for (var i = 0; i < testaudio.childNodes.length; i++) {
         testaudio.removeChild(testaudio.childNodes[i]);
       }

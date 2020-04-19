@@ -8,7 +8,7 @@ app.post('/likeInsert',function(req,res){
    var commentsId = req.body.commentsId;
     var loginId = req.body.loginId;
     
-    // console.log(commentsId,loginId)
+    console.log(commentsId,loginId)
     
    
         

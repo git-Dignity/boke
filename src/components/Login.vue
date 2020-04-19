@@ -37,7 +37,6 @@
 <script>
 import jquery from '../../static/jquery-1.9.1.min'
 import yudi from '../../static/js/yudi'      // 雨滴
-    
 
 export default{
     

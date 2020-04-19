@@ -11,6 +11,7 @@ import MusicPlayer from '../components/MusicPlayer.vue'
 import SetUp from '../components/SetUp.vue'
 import Log from '../components/Log.vue'
 import TemporarilyRun from '../components/TemporarilyRun.vue'
+import Agency from '../components/Agency.vue'
 
 import VueRouter from 'vue-router'
 const routes = [
@@ -26,7 +27,8 @@ const routes = [
     {path:'/MusicPlayer',name:'MusicPlayer',component:MusicPlayer,meta:{requireAuth:true}},
     {path:'/setUp',name:'setUp',component:SetUp,meta:{requireAuth:true}},
     {path:'/log',name:'log',component:Log,meta:{requireAuth:true}},
-    {path:'/TemporarilyRun',name:'temporarilyRun',component:TemporarilyRun,meta:{requireAuth:true}}
+    {path:'/TemporarilyRun',name:'temporarilyRun',component:TemporarilyRun,meta:{requireAuth:true}},
+    {path:'/Agency',name:'Agency',component:Agency,meta:{requireAuth:true}},
     
 ]
 const router = new VueRouter({
