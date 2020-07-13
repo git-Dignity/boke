@@ -1,6 +1,6 @@
 # my-blog
 
-> A Vue.js project
+> https://zhengzemin.cn/
 
 ## Build Setup
 
